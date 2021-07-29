@@ -41,7 +41,9 @@ function app(){
     }
 
     form.addEventListener('submit', formHandler)
-    globalTimer = setInterval(timeoutHandler, 1000)
+    if (!document.querySelector('#guess-btn').disabled){
+        globalTimer = setInterval(timeoutHandler, 1000)
+    }
 }
 
 app();

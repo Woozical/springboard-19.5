@@ -10,9 +10,10 @@ def home_view():
     if not session.get('board'):
         reset_session()
 
-    # Some logic to detect if user refreshed page mid-game (Ends current game session)
+    # Some logic to detect if user exited page mid-game last session (Ends current game session)
     if session['score'] != 0 and not session['time_up']:
-        session['time_up'] = True
+        end_game()
+        
     return render_template('base.html')
 
 
@@ -49,7 +50,7 @@ def receive_timeout():
     Endpoint that the client will send a POST request to when the game is over
     Updates session cookie to indicate that the game is over
     """
-    session['time_up'] = True
+    end_game()
     return jsonify({'response' : 'ok'})
 
 def handle_guess(word):
@@ -87,8 +88,19 @@ def update_session(word, num):
 
     return session
 
-def reset_session():
+def reset_session(full=False):
     session['board']  = boggle_game.make_board()
     session['guessed'] = []
     session['score'] = 0
     session['time_up'] = False
+
+    if full:
+        session['high_score'] = 0
+        session['play_count'] = 0
+
+def end_game():
+    session['time_up'] = True
+    high_score = session.get('high_score', 0)
+    cur_score = session.get('score', 0)
+    session['high_score'] = cur_score if cur_score > high_score else high_score
+    session['play_count'] = session.get('play_count', 0) + 1
