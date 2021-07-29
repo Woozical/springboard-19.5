@@ -1,0 +1,9 @@
+<table>
+    {% for row in session['board']%}
+    <tr>
+        {% for cell in row %}
+            <td>{{cell}}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+</table>
