@@ -1,6 +1,6 @@
 const form = document.querySelector('#guess-form');
 const result = document.querySelector('#guess-result');
-let score = 0;
+const scoreDisplay = document.querySelector('#score');
 
 async function formHandler(e){
     e.preventDefault();
@@ -10,9 +10,7 @@ async function formHandler(e){
     });
 
     showGuessResult(response.data.response);
-    if (response.data.response === "ok"){
-        updateScore(form.guess.value.length)
-    }
+    updateScore(response.data.score)
 }
 
 function showGuessResult(text){
@@ -20,8 +18,9 @@ function showGuessResult(text){
 }
 
 function updateScore(num){
-    score += num
-    console.log(score)
+    score = +scoreDisplay.innerText.split(" ")[1];
+    score += num;
+    scoreDisplay.innerText = "Score: " + score;
 }
 
 form.addEventListener('submit', formHandler)

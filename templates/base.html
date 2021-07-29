@@ -7,7 +7,13 @@
     <title>Boggle</title>
 </head>
 <body>
-    <h1>Hello World</h1>
+    <h1>Boggle</h1>
+    {% if session['score'] %}
+        <h2 id="score">Score: {{session['score']}}</h2>
+    {% else %}
+        <h2 id="score">Score: 0</h2>
+    {% endif %}
+    <form action="/new" method="POST"><button>New Game</button></form>
     {% include "boggle-board.html" %}
     {% include "guess-form.html" %}
     <p id="guess-result"></p>
