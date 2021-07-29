@@ -2,5 +2,9 @@
     <label for="guess">Enter a guess:</label>
     <input type="text" name="guess" id="">
     <br>
+    {% if session['time_up'] %}
+    <button id="guess-btn" disabled>Submit</button>
+    {% else %}
     <button id="guess-btn">Submit</button>
+    {% endif %}
 </form>

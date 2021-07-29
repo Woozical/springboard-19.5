@@ -8,12 +8,19 @@
 </head>
 <body>
     <h1>Boggle</h1>
+    
     {% if session['score'] %}
         <h2 id="score">Score: {{session['score']}}</h2>
     {% else %}
         <h2 id="score">Score: 0</h2>
     {% endif %}
-    <h3 id="timer">Time: 60</h3>
+
+    {% if session['time_up'] %}
+        <h3 id="timer">Time: 0</h3>
+    {% else %}
+        <h3 id="timer">Time: 60</h3>
+    {% endif %}
+
     <form action="/new" method="POST"><button>New Game</button></form>
     {% include "boggle-board.html" %}
     {% include "guess-form.html" %}

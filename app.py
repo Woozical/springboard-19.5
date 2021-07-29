@@ -8,16 +8,17 @@ app.config['SECRET_KEY'] = "YOUR_KEY_HERE"
 @app.route('/')
 def home_view():
     if not session.get('board'):
-        session['board']  = boggle_game.make_board()
+        reset_session()
+
+    # Some logic to detect if user refreshed page mid-game (Ends current game session)
+    if session['score'] != 0 and not session['time_up']:
+        session['time_up'] = True
     return render_template('base.html')
 
 
 @app.route('/new', methods=['POST'])
 def new_board():
-    session['board']  = boggle_game.make_board()
-    session['guessed'] = []
-    session['score'] = 0
-    session['time_up'] = False
+    reset_session()
     return redirect('/')
 
 @app.route('/guess', methods=['POST'])
@@ -32,6 +33,7 @@ def receive_guess():
     }
     As well as an updated session cookie
     """
+
     data = request.get_json()['data']
     guess = data['guess']
     outcome = handle_guess(guess)
@@ -39,6 +41,16 @@ def receive_guess():
     update_session(guess, outcome['score'])
 
     return jsonify(outcome)
+
+
+@app.route('/timeout', methods=['POST'])
+def receive_timeout():
+    """
+    Endpoint that the client will send a POST request to when the game is over
+    Updates session cookie to indicate that the game is over
+    """
+    session['time_up'] = True
+    return jsonify({'response' : 'ok'})
 
 def handle_guess(word):
     """"
@@ -49,10 +61,15 @@ def handle_guess(word):
     {response: "not-word"} --> guess is not a recognized word
     {response: "not-on-board"} --> guess is a word, but not found on the board
     {response: "already-guessed"} --> guess is a word on the board, but already guessed
+    {response: "time-up"} --> session cookie indicates time is up, ignoring guess
     """
-    # check if client has already guessed the given word
-    if word in session.get('guessed', {}):
+    # check if client has already guessed the given word, or is trying to cheat while time is up
+    if session['time_up']:
+        result = 'time-up'
+        score = 0
+    elif word in session.get('guessed', {}):
         result = "already-guessed"
+        score = 0
     else:
         result = boggle_game.check_valid_word(session['board'], word)
         score = len(word) if result == "ok" else 0
@@ -69,3 +86,9 @@ def update_session(word, num):
     session['score'] = session.get('score', 0) + num
 
     return session
+
+def reset_session():
+    session['board']  = boggle_game.make_board()
+    session['guessed'] = []
+    session['score'] = 0
+    session['time_up'] = False
