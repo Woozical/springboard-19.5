@@ -1,0 +1,26 @@
+<div class="control">
+    {% if session['score'] %}
+    <h2 id="score">Score: {{session['score']}}</h2>
+    {% else %}
+        <h2 id="score">Score: 0</h2>
+    {% endif %}
+
+    {% if session['time_up'] %}
+        <h3 id="timer">Time: 0</h3>
+    {% else %}
+        <h3 id="timer">Time: 60</h3>
+    {% endif %}
+
+    {% if session['high_score'] %}
+        <h3 id="high-score">High Score: {{session['high_score']}}</h3>
+    {% else %}
+        <h3 id="high-score">High Score: 0</h3>
+    {% endif %}
+
+    {% if session['play_count'] %}
+        <h3 id="play-count">Games Played: {{session['play_count']}}</h3>
+    {% else %}
+        <h3 id="play-count">Games Played: 0</h3>
+    {% endif %}
+    <form action="/new" method="POST"><button>New Game</button></form>
+</div>

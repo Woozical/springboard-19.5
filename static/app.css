@@ -1,0 +1,41 @@
+body{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.control{
+    display: flex;
+    width: 60vw;
+    border: 1px solid black;
+    justify-content: space-around;
+    align-content: flex-end;
+}
+
+.control button{
+    top: 40%;
+    position: relative;
+}
+
+table{
+    margin-top: 2vh;
+    border: 1px solid black;
+    width: 55vw;
+    height: 50vh;
+}
+
+td{
+    text-align: center;
+    font-size: 3rem;
+    border: 2px solid rgba(0, 0, 0, 0.25)
+}
+
+#guess-form{
+    text-align: center;
+    margin-top: 2vh;
+}
+
+#guess-form input{
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+}
