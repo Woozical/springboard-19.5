@@ -21,7 +21,29 @@ def receive_guess():
     """
 
     guess = request.args.get('guess', '').lower()
-    result = boggle_game.check_valid_word(session['board'], guess)
-    return jsonify(
-        {"response" : result}
-    )
+    outcome = handle_guess(guess)
+
+    return jsonify(outcome)
+
+def handle_guess(word):
+    """"
+    Given a word, check if that word exists in the client's game board.
+    Will return a dict where {"response" : outcome}
+    
+    {response: "ok"} --> guess is in game board
+    {response: "not-word"} --> guess is not a recognized word
+    {response: "not-on-board"} --> guess is a word, but not found on the board
+    {response: "already-guessed"} --> guess is a word on the board, but already guessed
+    """
+    # check if client has already guessed the given word
+    if word in session.get('guessed', {}):
+        result = "already-guessed"
+    else:
+        result = boggle_game.check_valid_word(session['board'], word)
+
+        # add guess to already guessed words
+        guessed = set(session.get('guessed', []))
+        guessed.add(word)
+        session['guessed'] = list(guessed)
+
+    return {"response" : result}
