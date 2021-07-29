@@ -4,6 +4,7 @@ function app(){
     const scoreDisplay = document.querySelector('#score');
     const timerDisplay = document.querySelector('#timer');
     let globalTimer;
+    let timeRemain = +timerDisplay.innerText.split(" ")[1];
 
     async function formHandler(e){
         e.preventDefault();
@@ -14,19 +15,17 @@ function app(){
 
         showGuessResult(response.data.response);
         updateScore(response.data.score)
-
+        form.guess.value = '';
     }
 
     function timeoutHandler(){
-        time = +timerDisplay.innerText.split(" ")[1];
-        time -= 1;
-        if (time < 0){
+        timeRemain -= 1;
+        timerDisplay.innerText = "Time: " + timeRemain;
+        if (timeRemain <= 0){
             clearInterval(globalTimer);
             const btn = document.querySelector('#guess-btn');
             btn.setAttribute('disabled', '');
             axios.post('/timeout');
-        } else {
-            timerDisplay.innerText = "Time: " + time;
         }
     }
 
@@ -40,9 +39,9 @@ function app(){
         scoreDisplay.innerText = "Score: " + score;
     }
 
-    form.addEventListener('submit', formHandler)
-    if (!document.querySelector('#guess-btn').disabled){
-        globalTimer = setInterval(timeoutHandler, 1000)
+    form.addEventListener('submit', formHandler);
+    if (timeRemain > 0){
+        globalTimer = setInterval(timeoutHandler, 1000);
     }
 }
 

@@ -13,12 +13,15 @@ def home_view():
     # Some logic to detect if user exited page mid-game last session (Ends current game session)
     if session['score'] != 0 and not session['time_up']:
         end_game()
-        
+
     return render_template('base.html')
 
 
 @app.route('/new', methods=['POST'])
 def new_board():
+    """
+    Endpoint for client side to request a new game session
+    """
     reset_session()
     return redirect('/')
 
