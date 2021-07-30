@@ -29,7 +29,25 @@ function app(){
         }
     }
 
-    function showGuessResult(text){
+    function showGuessResult(response){
+        let text;
+        switch(response){
+            case "ok":
+                text = "Correct!";
+                break;
+            case "not-word":
+                text = "That's not a word...";
+                break;
+            case "not-on-board":
+                text = "Not on the board, try again.";
+                break;
+            case "already-guessed":
+                text = "You already guessed that! Try again.";
+                break;
+            default:
+                text = response;
+        }
+
         result.innerText = text;
     }
 
