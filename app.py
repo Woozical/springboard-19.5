@@ -4,6 +4,7 @@ from flask import Flask, session, render_template, request, redirect, jsonify
 boggle_game = Boggle()
 app = Flask(__name__)
 app.config['SECRET_KEY'] = "YOUR_KEY_HERE"
+app.config['TESTING'] = True
 
 @app.route('/')
 def home_view():
